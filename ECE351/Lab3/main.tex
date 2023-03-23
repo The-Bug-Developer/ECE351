@@ -1,0 +1,76 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta} 
+\usepackage[pdftex]{graphicx}
+\usepackage[top=1in, bottom=1in, left=0.75in, right=0.75in]{geometry}
+\linespread{1}
+\setlength{\parskip}{8pt plus2pt minus2pt}
+\widowpenalty 10000
+\clubpenalty 10000
+\newcommand{\eat}[1]{}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage[official]{eurosym}
+\usepackage{enumitem}
+\setlist{nolistsep,noitemsep}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\usepackage{lipsum}
+\graphicspath{ {./images/} }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                              %
+% Zachary DeLuca                                               %
+% ECE 351 Section 53                                           %
+% Lab 03                                                       %
+% Due: Feb 07                                                  %
+%                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{ECE 351 Lab 3}
+\author{Zachary DeLuca  }
+\date{Ferbruary 7th 2023}
+
+\begin{document}
+
+\maketitle
+\hline
+\section{Introduction}
+In this lab we will be continuing with the previous labs steps and ramps. The major variation in this lab is that we will be working with convolutions as well as the regular ramps and steps. The majority of the show and tell for this lab will again be printed graphs. 
+\vspace{0.25in} \\
+\hline \\
+\section{Function Definitions }
+The first task was to use the previous user defined functions to implement the following graphs: 
+\begin{center}
+$$f_1(t)=u(t=2)-u(t-9)$$\\
+\includegraphics[width = 7in]{Figure 2023-02-07 002458.png} 
+$$f_2(t)=e^{-t}u(t)$$\\
+\includegraphics[width = 7in]{Figure 2023-02-07 002526.png}
+$$f_3(t)=r(t-2)[u(t-2_-u(t-3)]+r(4-t)[u(t-3)-u(t-4)]$$\\
+\includegraphics[width = 7in]{Figure 2023-02-07 002530.png}
+\end{center}
+\hline \\
+\section{Convoluted}
+In this section the functions above will be convolved graphically with each other in the order listed: 
+$$f_1(t)*f_2(t)$$ \\
+\includegraphics[width = 7in]{Figure 2023-02-07 164140.png} \\
+$$f_2(t)*f_3(t)$$ \\
+\includegraphics[width = 7in]{Figure 2023-02-07 164143.png} \\
+$$f_1(t)*f_3(t)$$ \\
+\includegraphics[width = 7in]{Figure 2023-02-07 164146.png} \\
+\hline \\
+\section{Questions} 
+1. Did you work alone or with classmates on this lab? If you collaborated to get to the solution,
+what did that process look like? \\
+\\
+I did indeed work with the people around me, and despite most of our code looking different, we ended up with similar looking convolution functions. \\
+\\
+2. What was the most difficult part of this lab for you, and what did your problem-solving
+process look like? \\ 
+\\
+The most difficult part of the lab was creating a function for the convolution using discrete intervals, as I spent the largest part of the lab time trying to make an integral function and use that for the convolution. Once I had switched tracks and begun working on a discrete answer, figuring out what that meant proved to be more challenging than anticipated. \\
+\\
+\hline \\
+\section {Conclusion}
+In this lab I was able to write and graph the functions given and then use the convolutions to, well, convolve the functions together. I have acquired a greater, yet still limited understanding of convolutions through this lab and the processes in it. 
+\end{document}

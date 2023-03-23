@@ -1,0 +1,75 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta} 
+\usepackage[pdftex]{graphicx}
+\usepackage[top=1in, bottom=1in, left=0.75in, right=0.75in]{geometry}
+\linespread{1}
+\setlength{\parskip}{8pt plus2pt minus2pt}
+\setlength{\parindent}{0pt}
+\widowpenalty 10000
+\clubpenalty 10000
+\newcommand{\eat}[1]{}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage[official]{eurosym}
+\usepackage{enumitem}
+\setlist{nolistsep,noitemsep}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\usepackage{lipsum}
+\graphicspath{ {./images/} }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                              %
+% Zachary DeLuca                                               %
+% ECE 351 Section 53                                           %
+% Lab 05                                                       %
+% Due: Feb 21                                                  %
+%                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{ECE 351 Lab 5}
+\author{Zachary DeLuca  }
+\date{February 21st 2023}
+
+\begin{document}
+\maketitle
+\hline
+\section{Introduction}
+In this lab we will operate in the Laplace domain to solve differential equations. We will work with the equation generated in the prelab and then use a user generated function and a built in function to graph the new function. 
+\section{Pre-Lab}
+Figure 4.1 shows the math used for the duration of the lab: 
+$$V_{out} = L\frac{di}{dt} = \frac{1}{C}\int_0^\infty i_C\ dt+i_0$$
+$$\frac{V_{in}-V_{out}}{R}=i=i_L+i_C$$
+$$\frac{V_{in}}{R}=\frac{1}{L}V_0^1+\frac{1}{R}+CV_0^'$$
+$$L\{That\}=V_i=V_0(\frac{1}{sL} + \frac{1}{R}+sC)$$
+$$H(s) = \frac{\frac{s}{RC}}{s^2+\frac{s}{RC}+\frac{1}{LC}}$$
+$$s=\frac{-\frac{1}{RC}+j\sqrt{4(\frac{1}{LC})-\frac{1}{R^2C^2}}}{2}$$
+$$\alpha = -\frac{1}{2RC}$$
+$$\omega = \sqrt{\frac{1}{LC}-\frac{1}{(2RC)^2}}$$
+$$|g| = \sqrt{\alpha^2+\omega^2}$$
+$$\theta = atan(\frac{\omega}{\alpha})$$
+$$f(t)=|g|e^{\alpha t}sin(\omega t +theta)$$
+And for the horrible finale: \\
+$$f(t)=\sqrt{(-\frac{1}{2RC})^2+(\sqrt{\frac{1}{LC}-\frac{1}{(2RC)^2}})^2}e^{(-\frac{1}{2RC}) t}sin((\sqrt{\frac{1}{LC}-\frac{1}{(2RC)^2}}) t +atan(\frac{\sqrt{\frac{1}{LC}-\frac{1}{(2RC)^2}}}{-\frac{1}{2RC}}))$$
+\section{Data Presentation}
+This lab was rather straight forward in the sense there are not too many graphs to produce for this report. The first graph is produced by the user built function and the bottom graph is built by the library's transfer function handler: \\ 
+\begin{center}
+        \centering
+        %\vspace{10in}
+        Figure 4.2\\
+        \begin{tabular}{|c|}
+        \hline
+        \includegraphics[width=6in]{Figure 2023-02-21 174515.png}
+        \\\hline
+        \end{tabular}
+        \label{Table 5.1}
+\end{center}
+\section{Questions}
+The final value theorem means what the circuit is going to settle on after the transients have dissipated away, meaning a filter with no source will settle at zero, whereas something battery operated will swing around a DC bias level and the final value will be the DC value of steady state. 
+\vspace{12pt}
+
+As always the labs are written confusingly and reference itself in a nonsensical pattern making deciphering the handout half the difficulty of the lab. 
+\section{Conclusion}
+This lab went smoothly, except for the fact that for some unknown reason the two graphs were mirrored over the x-axis relative to each other before being convinced otherwise by a negative in the graphing function. The transfer function used in the Laplace domain is much easier to use than the convolution in the time domain, and as the functions get more complicated I can see this being of increased usefulness. 
+\end{document}

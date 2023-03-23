@@ -1,0 +1,46 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+%\usepackage[greek,english]{babel}
+%\usepackage{alphabeta} 
+\usepackage[pdftex]{graphicx}
+\usepackage[top=1in, bottom=1in, left=0.75in, right=0.75in]{geometry}
+\linespread{1}
+\setlength{\parskip}{8pt plus2pt minus2pt}
+\setlength{\parindent}{0pt}
+\widowpenalty 10000
+\clubpenalty 10000
+\newcommand{\eat}[1]{}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage[official]{eurosym}
+%\usepackage{enumitem}
+%\setlist{nolistsep,noitemsep}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+%\usepackage{lipsum}
+\graphicspath{ {./images/} }
+
+\title{ECE 351 Lab 7}
+\author{Zachary DeLuca}
+\date{February 28th 2023}
+
+\begin{document}	
+\maketitle
+\hline
+\section{Introduction}
+\section{Math}
+Transfer function of Open Loop: 
+$$H(s) = \frac{Y(s)}{X(s)}=\frac{X(s)A(s)G(s)}{X(s)}=\frac{\frac{s+4}{s^2+4s+3}\frac{s+9}{(s^2-6s-16)(s+4)}}{1}$$
+
+$$\frac{(s+4)(s+9)}{(s+3)(s+1)(s+4)(s-8)(s+2)}=\frac{(s+9)}{(s+3)(s+1)(s-8)(s+2)}$$
+
+Zeros: -9\\
+Poles: -3, -1, 8, -2 \vspace{12pt}
+
+$$Y = E*G=X*A-Y*B=X*AG-Y*BG$$
+$$Y(1+BG)=X(AG)\rightarrow \frac{Y}{X}=H(s)=\frac{AG}{1+BG}=\frac{\frac{s+4}{s^2+4s+3}\frac{s+9}{(s^2-6s-16)(s+4)}}{1+\frac{s+9}{(s^2-6s-16)(s+4)}(s+12)(s+14)}$$
+
+$$H(s)=\frac{\frac{s+4}{(s+1)(s+3)}\frac{s+9}{(s-8)(s+2)(s+4)}}{1+\frac{s+9}{(s-8)(s+2)(s+4)}(s+12)(s+14)}$$
+$$H(s)=\frac{(s+9)}{(s+1)(s+3)(s+2)(s-8)(1+\frac{(s+9)(s+12)(s+14)}{(s-8)(s+2)(s+4)})}$$
+$$H(s)=\frac{(s+9)}{(s+1)(s+3)(s+2)(s-8)(s+12)(s+14)(\frac{(s-8)(s+2)(s+4)+(s+9)}{(s-8)(s+2)(s+4)})}$$
+$$H(s)=\frac{(s+9)(s+4)}{(s+1)(s+3)((s-8)(s+2)(s+4)+(s+9)(s+12)(s+14))}$$
+\end{document}

@@ -1,0 +1,53 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+%\usepackage[greek,english]{babel}
+%\usepackage{alphabeta} 
+\usepackage[pdftex]{graphicx}
+\usepackage[top=1in, bottom=1in, left=0.75in, right=0.75in]{geometry}
+\linespread{1}
+\setlength{\parskip}{8pt plus2pt minus2pt}
+\setlength{\parindent}{0pt}
+\widowpenalty 10000
+\clubpenalty 10000
+\newcommand{\eat}[1]{}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage[official]{eurosym}
+%\usepackage{enumitem}
+%\setlist{nolistsep,noitemsep}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+%\usepackage{lipsum}
+\graphicspath{ {./images/} }
+
+\title{ECE 351 Lab 6}
+\author{Zachary DeLuca}
+\date{February 28th 2023}
+
+\begin{document}
+	
+\maketitle
+\hline
+\section{Introduction}
+	In this lab we worked with the step and impulse response in the laplace domain. We will be modeling the responses as their transfer functions in the laplace domain so that the time domain functions can be calculated more easily. The function that the responses would be calculated were handled in the pre lab of this lab, which is listed in the first part of this report. \\
+\section{PreLab}
+	$$y''(t)+10y'(t)+24y(t)=x''(t)+6x'+12x(t)$$
+	$$Y(s^2+10s+24)=X(s^2+6s+12)$$
+	$$\frac{Y}{X}=\frac{(s^2+10s+24)}{(s^2+6s+12)}$$
+	$$H(s)=\frac{s^2+10s+24}{s^2+6s+12}$$
+\section{Response Graphs}
+	The next step of the lab was to figure out how this transfer function would interact with the step function and the impulse function. The first step was to figure out what the partial fraction expansion version of the response was so that way when we graphed it against the computer generated response, we could verify the result with certainty. When expanded out, the function becomes:
+	%def Steps(s):
+	%return 1/(2*s)+1/(s+6)+1/(2*s+8)
+	%def Stept(t):
+	%return %(0.5*u(0,t)+1*np.exp(-6*t)+0.5*np.exp(-8*t))*0.5*u(-0.001,t)
+	$$H(s)=\frac{1}{2s}+\frac{1}{s+6}+\frac{1}{2s+8}$$
+	$$f(t)=(\frac{u(t)}{2}e^{-6t}+\frac{e^-8t}{2})\frac{u(t)}{2}$$
+	Now that we have a function to graph, we can now graph all the things we need to graph. \vspace*{12pt}
+	
+	The first graph is the step response hand calculated and graphed, the second is the step function graphed by the signal library, and the third is the impulse response graphed by the signal library. \vspace*{12pt}
+	\begin{center}
+		\includegraphics[width=7in]{/home/void/Documents/Python/Images/Lab5.png}
+	\end{center}
+\section{Conclusion}
+	In this lab we were able to calculate and graph the responses to the step and impulse functions with regards to the presented function. The operation was much preferable in the laplace domain as opposed to finding the convolutions in the time domain. The last thing that needs discussing is the final value theorem, which states that the value of the time function should approach the same value at infinity as the laplace function's derivative does at zero. As the time function goes on forever, the value approaches zero, whereas the s domain function goes to 0 at 0 due to the derivative throwing an s on each of the terms.  
+\end{document}

@@ -1,0 +1,68 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta} 
+\usepackage[pdftex]{graphicx}
+\usepackage[top=1in, bottom=1in, left=0.75in, right=0.75in]{geometry}
+\linespread{1}
+\setlength{\parskip}{8pt plus2pt minus2pt}
+\widowpenalty 10000
+\clubpenalty 10000
+\newcommand{\eat}[1]{}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage[official]{eurosym}
+\usepackage{enumitem}
+\setlist{nolistsep,noitemsep}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\usepackage{lipsum}
+\graphicspath{ {./images/} }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                              %
+% Zachary DeLuca                                               %
+% ECE 351 Section 53                                           %
+% Lab 03                                                       %
+% Due: Feb 14                                                  %
+%                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{ECE 351 Lab 4}
+\author{Zachary DeLuca  }
+\date{February 14th 2023}
+
+\begin{document}
+\maketitle
+\hline
+\section{Introduction}
+In this lab we will play with convolutions again, but this time the convolutions will be mostly graphical. We will simply be graphically convolving some functions together below. Let us begin. 
+\section{Functions }
+The first thing to be done is to define the functions we will be working with: 
+$$h_1(t) = e^{-2t}[u(t)-u(t-3)]$$
+$$h_2(t) = u(t-2)-u(t-6)$$
+$$h_3(t)=cos(\omega_0t)u(t)$$
+
+\section{Python Convolutions}
+The first set of graphs is simply the functions graphed: \\ \vspace{24pt}
+\begin{center}
+\includegraphics[width=6in]{Figure 2023-02-14 180726.png}
+\\ \vspace{24pt}
+\end{center}
+
+The next set are the graphical representation of the step response of each of the functions, meaning each function convolved with u(t). \\
+\begin{center}
+\includegraphics[width=6in]{Figure 2023-02-14 180747.png}
+\end{center}
+\section{Hand Convolutions}
+The next step was to figure out what the graphs were to look like if the hand calculated convolutions were graphed. The first step is the hand convolutions: \\
+$$h_1(t)*u(t) = u(t)(-\frac{e^{-2t}}{2}+\frac{1}{2})-u(t-3)(-\frac{e^{-2t}}{2}+\frac{e^6}{2})$$
+$$h_2(t)*u(t) = r(t-2)-r(t-4)-r(t-6)+r(t-8)$$
+$$h_3(t)*u(t) = \int_0^t{cos(\omega_0(t-\tau))u(t)}dt = \frac{sin(\omega_0t)}{\omega_0}u(t)$$\\
+\begin{center}
+\includegraphics[width=6in]{Figure 2023-02-21 193154.png}
+\end{center}
+\section{Questions}
+    These labs continue to be confusing in what they want from us. 
+\section{Conclusion}
+In this lab, we were to graphically convolve functions together. Initially the program took a while to run but after some fixing and some optimizations, it was cut down and able to produce the correct graphs. The graphs of the hand drawn functions are very close but a bit off from the python generated graphs, but I suspect that python simply had difficulties working with the edge cases of the hand calculated cases. The scaling is also a bit off between the python generated vs hand calculations, and I suspect that is due to the way I stepped the functions, so the graphs are probably just scaled, as they have the same general behaviors. All in all, it turned out decently with some minor discrepencies. 
+\end{document}

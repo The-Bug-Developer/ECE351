@@ -50,11 +50,10 @@ def fun2(t):
     return 5*np.sin(2*np.pi*t)
 def fun3(t):
     return 2*np.cos(4*np.pi-2)+np.sin(12*np.pi+3)*np.sin(12*np.pi+3)
-tstep = 1e-2
-fstep = tstep*50
-timmy = np.arange(0,2,tstep)
-freaky = np.arange(-50,50,fstep)
-interest = np.arange(-2,2,fstep)
+step = 1e-1
+timmy = np.arange(-2,2,step)
+freaky = np.arange(-50,50,step)
+interest = np.arange(-20,20,step)
 uno = timmy
 one = interest
 
@@ -89,7 +88,7 @@ def plotmachine(t,f,i,first,second,third,fourth,fifth):
     plt.xlabel('f[Hz]')
     plt.grid()
     plt.subplot(3,2,5)
-    plt.stem(f,fourth,linefmt="yellow",markerfmt="green")
+    plt.stem(f,fourth,linefmt="green",markerfmt="green")
     plt.ylabel('XANG')
     plt.xlabel('f[Hz]')
     plt.grid()

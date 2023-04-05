@@ -15,20 +15,7 @@ import time                                                    #
 import math                                                    #
 from scipy . fftpack import fft , fftshift                     #
 ################################################################
-def u(start,intake):
-    if intake >= start:
-        output= 1
-    else:
-        output = 0
-    return output
-def ten(power):
-    return pow(10,power)
-def r(start,intake):
-    if intake >= start:
-        output= intake-start
-    else:
-        output = 0
-    return output
+step = 1e-4
 def point(x,fs):
     N = len ( x ) # find the length of the signal
     X_fft = sp.fftpack.fft ( x ) # perform the fast Fourier transform ( fft )
@@ -40,8 +27,6 @@ def point(x,fs):
     X_mag = np.abs ( X_fft_shifted ) / N # compute the magnitudes of the signal
     X_phi = np.angle ( X_fft_shifted ) # compute the phases of the signal
     # ----- End of user defined function ----- #
-    
-    
     return X_mag,X_phi,freq
 
 def fun1(t):
@@ -49,53 +34,57 @@ def fun1(t):
 def fun2(t):
     return 5*np.sin(2*np.pi*t)
 def fun3(t):
-    return 2*np.cos(4*np.pi-2)+np.sin(12*np.pi+3)*np.sin(12*np.pi+3)
-step = 1e-1
-timmy = np.arange(-2,2,step)
-freaky = np.arange(-50,50,step)
-interest = np.arange(-20,20,step)
-uno = timmy
-one = interest
+    return 2*np.cos(4*np.pi*t-2)+np.sin(12*np.pi*t+3)
 
-uno = fun1(uno)
-one = fun1(one)
+def autorange(bound,step):
+    array = np.arange(-bound,bound,step*2*bound)
+    return array
 
-buffer1 = freaky
-buffer2 = freaky
-buffer3 = 0
+timmy = autorange(2,step)
+freaky = autorange(50,step)
 
-buff1 = interest
-buff2 = interest
+one = fun1(timmy)
+two = fun2(timmy)
+three = fun3(timmy)
 
-buffer1,buffer2,buffer3 = point(uno,100)
-buff1,buff2,buffer3 = point(one,100)
+buffer1,buffer2,buffer3 = point(one,100)
+buffer4,buffer5,buffer6 = point(two,100)
+buffer7,buffer8,buffer9 = point(three,100)
 
-def plotmachine(t,f,i,first,second,third,fourth,fifth):
+def crank(t,f,b1,b2,b3):
     plt.figure(figsize=(10,5))
     plt.subplot(3,2,(1,2))
-    plt.plot(t,first,color="red")
+    plt.plot(t,f,color="purple")
     plt.xlabel("t(s)")
     plt.title('x(t)')
     plt.grid()
+    
     plt.subplot(3,2,3)
-    plt.stem(f,second,linefmt="yellow",markerfmt="yellow")
-    plt.ylabel('XANG')
-    plt.xlabel('f[Hz]')
+    plt.plot(b3,b1,color="blue")
+    plt.xlabel("F(w)")
+    plt.title('XMAG')
     plt.grid()
+    
     plt.subplot(3,2,4)
-    plt.stem(i,third,linefmt="yellow",markerfmt="yellow")
-    plt.ylabel('XANG')
-    plt.xlabel('f[Hz]')
+    plt.plot(b3,b2,color="red")
+    plt.xlabel("F(w)")
+    plt.title('XANG')
     plt.grid()
+    
+    interest = f[(int)(f.size/2-2*100):(int)(f.size/2+2*100)]
+    print(interest[0],interest[399])
+    i1,i2,i3 = point(interest,100)
+    
     plt.subplot(3,2,5)
-    plt.stem(f,fourth,linefmt="green",markerfmt="green")
-    plt.ylabel('XANG')
-    plt.xlabel('f[Hz]')
+    plt.plot(i3,i1,color="blue")
+    plt.xlabel("F(w)")
+    plt.title('XMAG')
     plt.grid()
+    
     plt.subplot(3,2,6)
-    plt.stem(i,fifth,linefmt="green",markerfmt="green")
-    plt.ylabel('XMAG')
-    plt.xlabel('f[Hz]')
+    plt.plot(i3,i2,color="red")
+    plt.xlabel("F(w)")
+    plt.title('XANG')
     plt.grid()
-
-plotmachine(timmy,freaky,interest,uno,buffer1,buff1,buffer2,buff2)
+    
+crank(timmy,one,buffer1,buffer2,buffer3)

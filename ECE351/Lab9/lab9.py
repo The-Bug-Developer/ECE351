@@ -34,10 +34,10 @@ def fun1(t):
 def fun2(t):
     return 5*np.sin(2*np.pi*t)
 def fun3(t):
-    return 2*np.cos(4*np.pi*t-2)+np.sin(12*np.pi*t+3)
+    return (2*np.cos(4*np.pi*t-2)+np.sin(12*np.pi*t+3))
 
 def autorange(bound,step):
-    array = np.arange(-bound,bound,step*2*bound)
+    array = np.arange(-bound,bound+1,step*2*bound)
     return array
 
 timmy = autorange(2,step)
@@ -47,12 +47,9 @@ one = fun1(timmy)
 two = fun2(timmy)
 three = fun3(timmy)
 
-buffer1,buffer2,buffer3 = point(one,100)
-buffer4,buffer5,buffer6 = point(two,100)
-buffer7,buffer8,buffer9 = point(three,100)
-
-def crank(t,f,b1,b2,b3):
-    plt.figure(figsize=(10,5))
+def crank(t,f,i):
+    b1,b2,b3 = point(f,100)
+    plt.figure(figsize=(45,15))
     plt.subplot(3,2,(1,2))
     plt.plot(t,f,color="purple")
     plt.xlabel("t(s)")
@@ -60,31 +57,55 @@ def crank(t,f,b1,b2,b3):
     plt.grid()
     
     plt.subplot(3,2,3)
-    plt.plot(b3,b1,color="blue")
+    plt.stem(b3,b1,markerfmt="blue",linefmt="blue")
     plt.xlabel("F(w)")
     plt.title('XMAG')
     plt.grid()
     
     plt.subplot(3,2,4)
-    plt.plot(b3,b2,color="red")
+    plt.stem(b3,b2,markerfmt="red",linefmt="red")
     plt.xlabel("F(w)")
     plt.title('XANG')
     plt.grid()
     
-    interest = f[(int)(f.size/2-2*100):(int)(f.size/2+2*100)]
-    print(interest[0],interest[399])
-    i1,i2,i3 = point(interest,100)
+    top = (int)((len(f)/2)+(i))+1
+    bottom = (int)((len(f)/2)-(i))
+    
+    print ('top',top,'bottom',bottom)
+    
+    i1 = b1[bottom:top]
+    i2 = b2[bottom:top]
+    
+    funky = autorange(i,1/(2*i))
     
     plt.subplot(3,2,5)
-    plt.plot(i3,i1,color="blue")
+    plt.stem(funky,i1,markerfmt="blue",linefmt="blue")
     plt.xlabel("F(w)")
     plt.title('XMAG')
     plt.grid()
     
     plt.subplot(3,2,6)
-    plt.plot(i3,i2,color="red")
+    plt.stem(funky,i2,markerfmt="red",linefmt="red")
     plt.xlabel("F(w)")
     plt.title('XANG')
     plt.grid()
-    
-crank(timmy,one,buffer1,buffer2,buffer3)
+
+crank(timmy,one,2)
+crank(timmy,two,2)
+crank(timmy,three,2)
+
+high = 16
+low = 0
+t = np.arange(low,high,step)
+T = 8
+omega = 2*np.pi/T
+
+def approximate(Time,terms):
+    waves = np.zeros(Time.size)
+    for k in range(terms):
+        if(k!=0):
+            for t in range(Time.size):
+                waves[t]+=(2/(np.pi*k))*(1-np.cos(np.pi*k))*(np.sin(k*omega*t*step))
+    return waves
+square = approximate(t,15)
+crank(t,square,10)

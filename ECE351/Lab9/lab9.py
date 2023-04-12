@@ -47,8 +47,8 @@ one = fun1(timmy)
 two = fun2(timmy)
 three = fun3(timmy)
 
-def crank(t,f,i):
-    b1,b2,b3 = point(f,100)
+def crank(t,f,i,fs):
+    b1,b2,b3 = point(f,fs)
     plt.figure(figsize=(45,15))
     plt.subplot(3,2,(1,2))
     plt.plot(t,f,color="purple")
@@ -90,9 +90,9 @@ def crank(t,f,i):
     plt.title('XANG')
     plt.grid()
 
-crank(timmy,one,2)
-crank(timmy,two,2)
-crank(timmy,three,2)
+crank(timmy,one,2,100)
+crank(timmy,two,2,100)
+crank(timmy,three,2,100)
 
 high = 16
 low = 0
@@ -108,4 +108,11 @@ def approximate(Time,terms):
                 waves[t]+=(2/(np.pi*k))*(1-np.cos(np.pi*k))*(np.sin(k*omega*t*step))
     return waves
 square = approximate(t,15)
-crank(t,square,10)
+crank(t,square,10,100)
+
+
+crank(timmy,one,2,10)
+crank(timmy,one,2,100)
+crank(timmy,one,2,1000)
+crank(timmy,one,2,10000)
+crank(timmy,one,2,100000)

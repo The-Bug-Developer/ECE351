@@ -37,8 +37,6 @@ angel = ((np.pi/2) - np.arctan( (w*licky) / (-1*(w**2) + (licky)) )) * (180/np.p
 
 
 
-
-
 sys = sig.TransferFunction([ricky],[1,ricky,licky])
 w2,mag2,phase2 = sig.bode(sys)
 

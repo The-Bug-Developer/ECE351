@@ -71,7 +71,7 @@ def crank(t,f,i,fs):
     top = (int)((len(f)/2)+(i))+1
     bottom = (int)((len(f)/2)-(i))
     
-    print ('top',top,'bottom',bottom)
+    #print ('top',top,'bottom',bottom)
     
     i1 = b1[bottom:top]
     i2 = b2[bottom:top]

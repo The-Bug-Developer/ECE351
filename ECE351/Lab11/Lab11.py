@@ -42,6 +42,10 @@ def zplane(b,a,filename = None):
     t1= plt.plot(z.real,z.imag,'o',ms=10,label='Zeros')
     plt.setp(t1,markersize=12.0,markeredgewidth=3.0)
     
+
+    t2 = plt . plot ( p . real , p . imag , 'x ' , ms =10 , label = ' Poles ')
+    plt . setp ( t2 , markersize =12.0 , markeredgewidth =3.0)
+    
     ax.spines['left'].set_position('center')
     ax.spines['bottom'].set_position('center')
     ax.spines['right'].set_visible(False)

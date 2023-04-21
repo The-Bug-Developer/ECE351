@@ -16,59 +16,65 @@ import math                                                    #
 import control as con                                          #
 from scipy . fftpack import fft , fftshift                     #
 ################################################################
-r=1e3
-l=27e-3
-c=100e-9
-ricky = 1/(r*c)
-licky = 1/(l*c)
-w= np.arange(pow(10,3),pow(10,6),100)
 
-def autorange(bound,step):
-    array = np.arange(-bound,bound+1,step*2*bound)
-    return array
+step = 1
+low = 1e3
+high = 1e6
 
+w = np.arange(low, high, step)
 
+R=1e3
+L=27e-3
+C=100e-9
 
-def fun1(t):
-    return np.cos(2*np.pi*100*t)+np.cos(2*np.pi*3024*t)+np.sin(2*np.pi*50000*t)
+magma = 10*np.log((w/(R*C)) / np.sqrt( (w/(R*C))**2 + (1/(L*C)-w**2)**2))
+angel = ((np.pi/2) - np.arctan( (w/(R*C)) / (-1*(w**2) + (1/(L*C))) )) * (180/np.pi)
 
-magma = 10*np.log((w*licky) / np.sqrt( (w*licky)**2 + (licky-w**2)**2))
-angel = ((np.pi/2) - np.arctan( (w*licky) / (-1*(w**2) + (licky)) )) * (180/np.pi)
-
-
-
-sys = sig.TransferFunction([ricky],[1,ricky,licky])
-w2,mag2,phase2 = sig.bode(sys)
-
-plt.figure(figsize=(20,10))
-plt.subplot(2,1,1)
-plt.semilogx(w,magma,color="black")
-plt.xlabel("t(s)")
-plt.title('Magnitude(w)')
+plt.figure(figsize=(10,7))
+plt.subplot(2,1,1) #Top Figure
 plt.grid()
+plt.semilogx(w, magma)
+plt.title("Pre caclulated")
 plt.subplot(2,1,2)
-plt.semilogx(w,angel,color="red")
-plt.xlabel("t(s)")
-plt.title('Phase(w)')
 plt.grid()
+plt.semilogx(w, angel)
+plt.show()
 
-plt.figure(figsize=(20,10))
-plt.subplot(2,1,1)
-plt.semilogx(w2,mag2,color="black")
-plt.xlabel("t(s)")
-plt.title('Magnitude(w)')
+#----------------------------TASK 1, PART 2------------#
+num = [1/(R*C),0]
+den = [1,1/(R*C),1/(L*C)]
+sys = sig.TransferFunction(num,den)
+ang,mag,phase = sig.bode(sys,w)
+
+plt.figure(figsize=(10,7))
+plt.subplot(2,1,1) 
 plt.grid()
+plt.semilogx(ang, mag)
+plt.title("Python Calculated")
 plt.subplot(2,1,2)
-plt.semilogx(w2,phase2,color="red")
-plt.xlabel("t(s)")
-plt.title('Phase(w)')
 plt.grid()
+plt.semilogx(ang, phase)
+plt.show()
 
 
-timmy = np.arange(0,0.01,1e-6)
-data1 = fun1(timmy)
-plt.figure(figsize=(20,10))
-plt.semilogx(timmy,data1,color="blue")
-plt.xlabel("t(s)")
-plt.title('x1(t)')
+sys = con.TransferFunction(num,den)
+_ = con.bode(sys, w, dB=True, Hz=True, deg=True, Plot=True)
+
+
+tea = 1e-7
+t = np.arange(0, 0.01+tea, tea)
+x = (np.cos(2*np.pi*100*t)+ np.cos(2*np.pi*3024*t) + np.sin(2*np.pi* 50000*t))
+
+numZ, denZ = sig.bilinear(num, den, 1/tea)
+xFiltered = sig.lfilter(numZ, denZ, x)
+
+plt.figure(figsize=(10,7))
+plt.subplot(2,1,1)
 plt.grid()
+plt.plot(t,x)
+plt.title("Unfiltered Signal")
+plt.subplot(2,1,2)
+plt.plot(t,xFiltered)
+plt.title("Filtered Signal")
+plt.grid()
+plt.show()

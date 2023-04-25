@@ -40,8 +40,61 @@ def combine(f1,f2):
     d = np.convolve(f1.den,f2.den)
     return sig.TransferFunction(n,d)
 
-top = 2000
-bot = 1800
+def point(x,fs):
+    N = len ( x ) # find the length of the signal
+    X_fft = sp.fftpack.fft ( x ) # perform the fast Fourier transform ( fft )
+    X_fft_shifted = sp.fftpack.fftshift( X_fft ) # shift zero frequency components
+    # to the center of the spectrum
+    freq = np.arange ( - N /2 , N /2) * fs / N # compute the frequencies for the output
+    # signal , ( fs is the sampling frequency and
+    # needs to be defined previously in your code
+    X_mag = np.abs ( X_fft_shifted ) / N # compute the magnitudes of the signal
+    X_phi = np.angle ( X_fft_shifted ) # compute the phases of the signal
+    # ----- End of user defined function ----- #
+    return X_mag,X_phi,freq
+
+def crank(t,f,i,fs):
+    b1,b2,b3 = point(f,fs)
+    plt.figure(figsize=(45,20))
+    plt.subplot(3,2,(1,2))
+    plt.plot(t,f,color="purple")
+    plt.xlabel("t(s)")
+    plt.title('x(t)')
+    plt.grid()
+
+    
+    plt.subplot(3,2,3)
+    plt.stem(b3,b1,markerfmt="blue",linefmt="blue")
+    plt.xlabel("F(w)")
+    plt.title('XMAG')
+    plt.grid()
+    plt.xlim(-fs/2,fs/2)
+    
+    plt.subplot(3,2,4)
+    plt.stem(b3,b2,markerfmt="red",linefmt="red")
+    plt.xlabel("F(w)")
+    plt.title('XANG')
+    plt.grid()
+    plt.xlim(-fs/2,fs/2)
+    
+    plt.subplot(3,2,5)
+    plt.stem(b3,b1,markerfmt="blue",linefmt="blue")
+    plt.xlabel("F(w)")
+    plt.title('XMAG')
+    plt.grid()
+    plt.xlim(0,i)
+    
+    plt.subplot(3,2,6)
+    plt.stem(b3,b2,markerfmt="red",linefmt="red")
+    plt.xlabel("F(w)")
+    plt.title('XANG')
+    plt.grid()
+    plt.xlim(0,i)
+    return b1,b2,b3
+    
+cor = 20
+top = 1800-cor
+bot = 2000+cor
 
 lo = [filter(top,0.518,'low'),filter(top,1.41,'low'),filter(top,1.932,'low')]
 hi = [filter(bot,0.518,'high'),filter(bot,1.41,'high'),filter(bot,1.932,'high')]
@@ -78,14 +131,16 @@ hobw[i],hobm[i],hobp[i]= sig.bode(hi[i].transfer)
 i =2
 hobw[i],hobm[i],hobp[i]= sig.bode(hi[i].transfer)
 
-total = combine(high,low)
-#total.num*=2
-#total.den*=2
+gain = sig.TransferFunction([3000],[1])
+
+total = combine(combine(high,low),gain)
 wt,mt,pt = sig.bode(total)
 
 plt.figure(figsize=(20,10))
 plt.grid()
+plt.title('Filter Functions')
 plt.subplot(3,1,1)
+plt.legend(loc="lower right")
 plt.semilogx(wL,lobm[0],color="red")
 plt.semilogx(wL,lobm[1],color="orange")
 plt.semilogx(wL,lobm[2],color="green")
@@ -103,76 +158,46 @@ plt.axvline(bot, color='PURPLE') # cutoff frequency
 plt.semilogx(wt,mt,color="black")
 
 df = pd . read_csv ( 'NoisySignal.csv')
-
 t = df [ '0' ]. values
 sensor_sig = df [ '1' ]. values
-plt . figure ( figsize = (10 , 7) )
-plt . plot (t , sensor_sig )
-plt . grid ()
-plt . title ( ' Noisy Input Signal ')
-plt . xlabel ( ' Time [ s ] ')
-plt . ylabel ( ' Amplitude [ V ] ')
-plt . show ()
 
+sigMag, sigPhase, sigRange = crank(df,sensor_sig,4300,10000)
 
-step = 1e-4
-def point(x,fs):
-    N = len ( x ) # find the length of the signal
-    X_fft = sp.fftpack.fft ( x ) # perform the fast Fourier transform ( fft )
-    X_fft_shifted = sp.fftpack.fftshift( X_fft ) # shift zero frequency components
-    # to the center of the spectrum
-    freq = np.arange ( - N /2 , N /2) * fs / N # compute the frequencies for the output
-    # signal , ( fs is the sampling frequency and
-    # needs to be defined previously in your code
-    X_mag = np.abs ( X_fft_shifted ) / N # compute the magnitudes of the signal
-    X_phi = np.angle ( X_fft_shifted ) # compute the phases of the signal
-    # ----- End of user defined function ----- #
-    return X_mag,X_phi,freq
+seriesCompMag = []
+seriesCompFreak = []
+Mmax = 0
+for i in range (len(sigRange)):
+    if (sigMag[i] > Mmax) & (sigRange[i]>0): 
+        Mmax = sigMag[i]
+    if (sigMag[i] > 0.013) & (sigRange[i]>0):
+        seriesCompMag.append(sigMag[i])
+        seriesCompFreak.append(sigRange[i])
 
-def crank(t,f,i,fs):
-    b1,b2,b3 = point(f,fs)
-    plt.figure(figsize=(45,15))
-    plt.subplot(3,2,(1,2))
-    plt.plot(t,f,color="purple")
-    plt.xlabel("t(s)")
-    plt.title('x(t)')
-    plt.grid()
-    
-    plt.subplot(3,2,3)
-    plt.stem(b3,b1,markerfmt="blue",linefmt="blue")
-    plt.xlabel("F(w)")
-    plt.title('XMAG')
-    plt.grid()
-    
-    plt.subplot(3,2,4)
-    plt.stem(b3,b2,markerfmt="red",linefmt="red")
-    plt.xlabel("F(w)")
-    plt.title('XANG')
-    plt.grid()
-    
-    top = (int)((len(f)/2)+(i))+1
-    bottom = (int)((len(f)/2)-(i))
-    
-    #print ('top',top,'bottom',bottom)
-    
-    i1 = b1[bottom:top]
-    i2 = b2[bottom:top]
-    
-    funky = autorange(i,1/(2*i))
-    
-    plt.subplot(3,2,5)
-    plt.stem(funky,i1,markerfmt="blue",linefmt="blue")
-    plt.xlabel("F(w)")
-    plt.title('XMAG')
-    plt.grid()
-    
-    plt.subplot(3,2,6)
-    plt.stem(funky,i2,markerfmt="red",linefmt="red")
-    plt.xlabel("F(w)")
-    plt.title('XANG')
-    plt.grid()
+#print(len(seriesCompMag),len(seriesCompFreak))
+#print(seriesCompMag,seriesCompFreak)
 
-after = df * mt
-plt.figure(figsize=(20,10))
-plt.grid()
-plt.semilogx(wL,after,color="red")
+def fun(m,n):
+    garbo = []
+    #print(m,n)
+    for i in range(len(t)):
+        garbo.append(m*np.sin(n*2*np.pi*t[i]))
+    return garbo
+    
+seriesComp = []
+for i in range(len(seriesCompFreak)):
+    for j in range(len(wt)):
+        if (seriesCompFreak[i]<=wt[j]*1.2)&(seriesCompFreak[i]>=wt[j]*0.8):
+            k = 10**(mt[j]/20)
+            if k > 0.01:
+                if seriesCompMag[i]*k < seriesCompMag[i]*10**(-0.3/20):
+                    print(seriesCompFreak[i],'killed',seriesCompMag[i],k)
+                else:
+                    print(seriesCompFreak[i],'passed',seriesCompMag[i],k)
+            seriesComp.append(fun(seriesCompMag[i]*k,seriesCompFreak[i]))
+            break
+print(len(seriesComp))
+    
+series = np.zeros(len(seriesComp[0]))
+for i in range(len(seriesComp)):
+    series+=seriesComp[i]
+sigMag, sigPhase, sigRange = crank(df,series,4300,10000)

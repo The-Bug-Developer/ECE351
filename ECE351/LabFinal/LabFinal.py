@@ -161,7 +161,7 @@ df = pd . read_csv ( 'NoisySignal.csv')
 t = df [ '0' ]. values
 sensor_sig = df [ '1' ]. values
 
-sigMag, sigPhase, sigRange = crank(df,sensor_sig,4300,10000)
+sigMag, sigPhase, sigRange = crank(t,sensor_sig,4300,1e6)
 
 seriesCompMag = []
 seriesCompFreak = []
@@ -200,4 +200,4 @@ print(len(seriesComp))
 series = np.zeros(len(seriesComp[0]))
 for i in range(len(seriesComp)):
     series+=seriesComp[i]
-sigMag, sigPhase, sigRange = crank(df,series,4300,10000)
+sigMag, sigPhase, sigRange = crank(t,series,4300,1e6)

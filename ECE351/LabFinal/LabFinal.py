@@ -34,7 +34,9 @@ class filter():
             self.den = [1,2*self.scale/self.rh[1],self.scale**2/(self.rh[0]*self.rh[1])]
         self.transfer = sig.TransferFunction(self.num,self.den)
         self.w,self.m,self.p = sig.bode(self.transfer)
-    
+        self.cl = [2/(proto*self.scale),proto/(2*self.scale)]
+        self.rh = [2*1e6/(proto*self.scale),proto*1e6/(2*self.scale)]
+        self.ch = 1e-6
 def combine(f1,f2):
     n = np.convolve(f1.num,f2.num)
     d = np.convolve(f1.den,f2.den)
@@ -92,9 +94,9 @@ def crank(t,f,i,fs):
     plt.xlim(0,i)
     return b1,b2,b3
     
-cor = 20
-top = 1800-cor
-bot = 2000+cor
+
+top = 1800
+bot = 2000
 
 lo = [filter(top,0.518,'low'),filter(top,1.41,'low'),filter(top,1.932,'low')]
 hi = [filter(bot,0.518,'high'),filter(bot,1.41,'high'),filter(bot,1.932,'high')]
@@ -136,32 +138,49 @@ gain = sig.TransferFunction([3000],[1])
 total = combine(combine(high,low),gain)
 wt,mt,pt = sig.bode(total)
 
-plt.figure(figsize=(20,10))
+plt.figure(figsize=(30,22))
 plt.grid()
-plt.title('Filter Functions')
-plt.subplot(3,1,1)
-plt.legend(loc="lower right")
+plt.subplot(4,1,1)
 plt.semilogx(wL,lobm[0],color="red")
 plt.semilogx(wL,lobm[1],color="orange")
 plt.semilogx(wL,lobm[2],color="green")
 plt.semilogx(wL,mL,color="blue")
 plt.axvline(top, color='PURPLE') # cutoff frequency
-plt.subplot(3,1,2)
+plt.title('Low Pass Filters')
+plt.xlabel('Hz')
+plt.legend(["First Stage","Second Stage","Third Stage","Total Cascade"])
+
+plt.subplot(4,1,2)
 plt.semilogx(wH,hobm[0],color="red")
 plt.semilogx(wH,hobm[1],color="orange")
 plt.semilogx(wH,hobm[2],color="green")
 plt.semilogx(wH,mH,color="blue")
+plt.title('High Pass Filters')
 plt.axvline(bot, color='PURPLE') # cutoff frequency
-plt.subplot(3,1,3)
+plt.xlabel('Hz')
+plt.legend(["First Stage","Second Stage","Third Stage","Total Cascade"],loc='lower right')
+
+plt.subplot(4,1,3)
 plt.axvline(top, color='PURPLE') # cutoff frequency
 plt.axvline(bot, color='PURPLE') # cutoff frequency
 plt.semilogx(wt,mt,color="black")
+plt.title('Band Pass Filter')
+plt.xlabel('Hz')
+
+plt.subplot(4,1,4)
+plt.semilogx(wt,mt,color="black")
+plt.title('Band Pass Region')
+plt.axvline(top, color='PURPLE') # cutoff frequency
+plt.axvline(bot, color='PURPLE') # cutoff frequency
+plt.xlim(1700,2100)
+plt.xlabel('Hz')
+plt.ylim(-10,2)
 
 df = pd . read_csv ( 'NoisySignal.csv')
 t = df [ '0' ]. values
 sensor_sig = df [ '1' ]. values
 
-sigMag, sigPhase, sigRange = crank(t,sensor_sig,4300,1e6)
+sigMag, sigPhase, sigRange = crank(t,sensor_sig,3000,1e6)
 
 seriesCompMag = []
 seriesCompFreak = []
@@ -188,16 +207,24 @@ for i in range(len(seriesCompFreak)):
     for j in range(len(wt)):
         if (seriesCompFreak[i]<=wt[j]*1.2)&(seriesCompFreak[i]>=wt[j]*0.8):
             k = 10**(mt[j]/20)
-            if k > 0.01:
-                if seriesCompMag[i]*k < seriesCompMag[i]*10**(-0.3/20):
-                    print(seriesCompFreak[i],'killed',seriesCompMag[i],k)
-                else:
-                    print(seriesCompFreak[i],'passed',seriesCompMag[i],k)
+            #if k > 0.01:
+                #if seriesCompMag[i]*k < seriesCompMag[i]*10**(-0.3/20):
+                    #print(seriesCompFreak[i],'killed',seriesCompMag[i],k)
+                #else:
+                    #print(seriesCompFreak[i],'passed',seriesCompMag[i],k)
             seriesComp.append(fun(seriesCompMag[i]*k,seriesCompFreak[i]))
             break
-print(len(seriesComp))
+#print(len(seriesComp))
     
 series = np.zeros(len(seriesComp[0]))
 for i in range(len(seriesComp)):
     series+=seriesComp[i]
-sigMag, sigPhase, sigRange = crank(t,series,4300,1e6)
+sigMag, sigPhase, sigRange = crank(t,series,3000,1e6)
+
+
+print('First Stage',lo[0].cl[0],lo[0].cl[1])
+print('Scond Stage',lo[1].cl[0],lo[1].cl[1])
+print('Third Stage',lo[2].cl[0],lo[2].cl[1])
+print('Fourth Stage',hi[0].rh[0],hi[0].rh[1],hi[0].ch)
+print('Fifth Stage',hi[1].rh[0],hi[1].rh[1],hi[1].ch)
+print('Sixth Stage',hi[2].rh[0],hi[2].rh[1],hi[2].ch)

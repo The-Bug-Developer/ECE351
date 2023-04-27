@@ -1,0 +1,66 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,english]{babel}
+\usepackage{alphabeta} 
+\usepackage[pdftex]{graphicx}
+\usepackage[top=1in, bottom=1in, left=0.5in, right=0.5in]{geometry}
+\linespread{1}
+\setlength{\parskip}{8pt plus2pt minus2pt}
+\widowpenalty 10000
+\clubpenalty 10000
+\newcommand{\eat}[1]{}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage[official]{eurosym}
+\usepackage{enumitem}
+\setlist{nolistsep,noitemsep}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cite}
+\usepackage{lipsum}
+\graphicspath{ {./images/} }
+\usepackage{listings}
+\usepackage{color}
+\setlength{\parindent}{0pt}
+
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+
+\lstset{frame=tb,
+	language=C,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
+
+
+\title{ECE 351 PreLab 10}
+\author{Zachary DeLuca}
+\date{April 17 2023}
+
+\begin{document}
+	\maketitle
+	Here are the required pre-lab calculations: \vspace{12pt}
+	\begin{center}
+	We are given: 
+	$$H(s)=\frac{\frac{1}{RC}s}{s^2+\frac{1}{RC}s+\frac{1}{LC}}$$
+	so we need to find the g value for this given function: 
+	$$g=\frac{1}{RC}s\bigg|_{-s=p}$$
+	$$p = -\frac{\frac{1}{RC}}{2}\pm \frac{\sqrt{\frac{1}{(RC)^2}-4(\frac{1}{LC})}}{2}$$
+	$$g=\frac{1}{RC}(-\frac{\frac{1}{RC}}{2}\pm \frac{\sqrt{\frac{1}{(RC)^2}-4(\frac{1}{LC})}}{2})$$
+	$$|g|=\sqrt{(-\frac{1}{2(RC)^2})^2+(\frac{\sqrt{\frac{1}{(RC)^2}-4(\frac{1}{LC})}}{2RC})^2}$$
+	$$\angle g = tan^{-1}\bigg(\frac{\frac{\sqrt{\frac{1}{(RC)^2}-4(\frac{1}{LC})}}{2RC}}{\frac{1}{(RC)^2}}\bigg)$$
+	
+	\end{center}
+\end{document}
